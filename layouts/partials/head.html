@@ -17,6 +17,12 @@
 {{
 partial "favicons.html" . }}
 
+{{ $style := "light-without-switcher" }}
+{{ if and (isset site.Params "style") (ne site.Params.style "") }}
+    {{ $style = site.Params.style | lower }}
+{{ end }}
+
+{{ if not (in (slice "light-without-switcher" "dark-without-switcher") $style) }}
 <style>
   body {
     visibility: hidden;
@@ -32,6 +38,7 @@ partial "favicons.html" . }}
     }
   </style>
 </noscript>
+{{end}}
 
 {{ partial "resource.html" (dict "context" . "type" "css" "filename"
 "css/main.css") }} {{ if .Site.Params.copyCodeButton | default true }} {{
@@ -58,5 +65,9 @@ if isset .Site.Params.webmentions "login" }}
 <!-- {{ if and (.Site.GoogleAnalytics) (hugo.IsProduction) }} -->
 <!--     {{ template "_internal/google_analytics.html" . }} -->
 <!-- {{ end }} -->
+
+{{ if (.Site.Params.UmamiAnalytics.enabled ) }}
+    {{ partial "umami_analytics.html" . }}
+{{ end }}
 
 {{ partial "head-extra.html" . }}
